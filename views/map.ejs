@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+    <div class="contents" >
+      <div id="map" style="width:100%;height:380px;"></div>
+      <span class="location">
+        <input name = "lat" type="text" value="37.498362123762"> 
+        <input name = "lng" type="text" value="127.03451238865"> 
+
+      </span>
+    </div> 
+  </body>
+    <%-include('../public/javascripts/map.js') %> 
+    
+</html>
