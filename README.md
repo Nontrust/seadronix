@@ -11,3 +11,7 @@
     - $ cd myapp
     - $ npm install
     - $ npm start
+
+[https://codingcoding.tistory.com/449]
+3. Connect DB
+    -  npm install mysql 

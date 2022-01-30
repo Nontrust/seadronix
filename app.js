@@ -3,11 +3,31 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const mysql = require('mysql');
 
 const indexRouter = require('./routes/index');
 const queueRouter = require('./routes/queue');
 const videoRouter= require('./routes/video');
 const mapRouter= require('./routes/map');
+
+const con = mysql.createConnection({
+  host : 'localhost',
+  user : 'root',
+  password : '1234',
+  database: 'seadronix_db'
+});
+
+con.connect(function (err) {
+  
+  if(err) {throw err};
+  console.log('Connect DB');
+  
+  const sql = "select * from SDRNX_MEMBER";
+  con.query(sql, function(err, result, fields){
+    if (err) {throw err};
+    console.log(result);
+  });
+});
 
 
 const app = express();
