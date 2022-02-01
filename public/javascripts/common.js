@@ -1,4 +1,7 @@
 <script>
+    const url = 'http://localhost';
+    const port = '3000';
+
     function selectorByName(docName){
         return document.getElementsByClassName(docName)[0];
     }

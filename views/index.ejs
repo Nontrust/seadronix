@@ -7,5 +7,57 @@
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+
+    
+    <a href="/queue"><h3>1. Dual Priority Queue</h3></a>
+    <a href="/video"><h3>2. Video</h3></a>
+    <h3>3. Map</h3>
+    <form action="/user/login" method="post">
+      <span>ID : </span><p><input id="id" type="text" placeholder="Id"> </p>
+      <span>PW : </span><p><input id="pw" type="texts" placeholder="password"> </p>
+    </form> 
+      <button type = "submit" class="submit">Login</button>
+    <div class = 'result'></div>
   </body>
+
+<script>
+  //event Bind
+  document.querySelector('.submit').addEventListener('click',loginFun);
+
+  //data send
+  function loginFun() {  
+      
+      let id = document.forms[0].elements[0].value;
+      let pw = document.forms[0].elements[1].value;
+      let reqData = {'id':id, 'pw':pw};
+      
+      ajax_send('http://localhost:3000/user/login', reqData);
+  };
+
+  //Send Req
+  function ajax_send(url, data){
+      //set xml
+      
+      data = JSON.stringify(data);
+      let xhr = new XMLHttpRequest();
+      
+      console.log(data);
+      xhr.open('POST',url);
+      xhr.setRequestHeader('Content-type','application/json');
+      xhr.send(data)
+      //send xml
+      xhr.addEventListener('load', function(){
+          let result = JSON.parse(xhr.responseText);
+          if (result.result=='no'){
+              document.querySelector('.result').innerHTML = '로그인에 실패했습니다.'
+          }
+          else if(result.result=='ok'){
+              location.href = '/queue';
+          }
+          else{
+              document.querySelector('.result').innerHTML = '오류가 발생했습니다.~'
+          }
+      });
+  }
+</script>
 </html>

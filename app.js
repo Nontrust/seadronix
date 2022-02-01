@@ -1,36 +1,19 @@
-const createError = require('http-errors');
+//모듈 설정
 const express = require('express');
 const path = require('path');
+const createError = require('http-errors');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const mysql = require('mysql');
+const session = require('express-session');
+const app = express();
 
+//router 분리
 const indexRouter = require('./routes/index');
-const queueRouter = require('./routes/queue');
+const queueRouter = require('./routes/queue'); 
 const videoRouter= require('./routes/video');
 const mapRouter= require('./routes/map');
+const userRouter= require('./routes/user');
 
-const con = mysql.createConnection({
-  host : 'localhost',
-  user : 'root',
-  password : '1234',
-  database: 'seadronix_db'
-});
-
-con.connect(function (err) {
-  
-  if(err) {throw err};
-  console.log('Connect DB');
-  
-  const sql = "select * from SDRNX_MEMBER";
-  con.query(sql, function(err, result, fields){
-    if (err) {throw err};
-    console.log(result);
-  });
-});
-
-
-const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -39,13 +22,25 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended : true })); //URL -encoded Bodies
+
+//session 설정
+app.use(session({
+  secret : 'seadronix_key', //session Key
+  resave : false, // 재저장 /X
+  saveUninitialized : true //store 전 초기화 X
+}))
+
+// cookie 설정
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+
 
 app.use('/', indexRouter);
 app.use('/queue', queueRouter);
 app.use('/video', videoRouter);
 app.use('/map', mapRouter);
+app.use('/user', userRouter);
 
 
 // catch 404 and forward to error handler
