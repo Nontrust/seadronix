@@ -8,7 +8,6 @@
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
 
-    <%= message %>
     <a href="/queue"><h3>1. Dual Priority Queue</h3></a>
     <a href="/video"><h3>2. Video</h3></a>
     <h3>3. Map</h3>
@@ -16,8 +15,9 @@
       <span>ID : </span><p><input id="id" type="text" placeholder="Id"> </p>
       <span>PW : </span><p><input id="pw" type="texts" placeholder="password"> </p>
     </form> 
-      <button type = "submit" class="submit">Login</button>
+    <button type = "submit" class="submit">Login</button>
     <div class = 'result'></div>
+    
   </body>
 
 <script>
@@ -52,7 +52,7 @@
               document.querySelector('.result').innerHTML = '로그인에 실패했습니다.'
           }
           else if(result.result=='ok'){
-              location.href = '/queue';
+              location.href = '/map';
           }
           else{
               document.querySelector('.result').innerHTML = '오류가 발생했습니다.~'

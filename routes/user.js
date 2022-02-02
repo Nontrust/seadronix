@@ -43,11 +43,12 @@ router.post('/login', function(req, res, next){
       
       if(rows[0].id == id){
         
-        con.query('select id from SDRNX_MEMBER where id=? and pw=?',[id,pw],function(err,pw_rows){
+        con.query('select id, user_seq from SDRNX_MEMBER where id=? and pw=?',[id,pw],function(err,pw_rows){
           console.log('pw check',pw_rows);
           if(pw_rows.length) {
             
             req.session.userName=pw_rows[0].id;
+            req.session.userSeq=pw_rows[0].user_seq;
             req.session.isLogin=true;
             console.log('loginSuccess');
             req.session.save(function(){

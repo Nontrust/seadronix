@@ -9,18 +9,125 @@
     <p>Welcome to <%= title %></p>
     <div class="contents" >
       <div id="map" style="width:100%;height:380px;"></div>
-      
       <div class="location">
-        <span><input name = "lat" type="number" value="37.498362123762" oninput = "posRemote(this)"></span> 
-        <span><input name = "lng" type="number" value="127.03451238865" oninput = "posRemote(this)"></span>
+      <form>
+        <span>x 좌표 : <input class = "lat" type="number" value="37.498362123762"></span><br/>
+        <span>y 좌표 : <input class = "lng" type="number" value="127.03451238865"></span><br/>
+        <span>타이틀: <input class = "locationTitle" type="text" ></span><br/>
+      </form>
       </div>
 
-      <button></button>
+      <button class = 'submit'>저장하기</button>
     </div> 
   </body>
   <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=<%= javascript_Key %>" ></script>
+    <script>
+      let xPos = 37.498362123762;
+      let yPos = 127.03451238865;
+  
+      let markerXPos = 37.498362123762;
+      let markerYPos = 127.03451238865;
 
-    <%-include('../public/javascripts/./common.js') %> 
-    <%-include('../public/javascripts/map.js') %> 
+      const $xPosInput = document.querySelector('.lat');
+      const $yPosInput = document.querySelector('.lng');
+  
+      let zoomLevel = 3;
+      const mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+          mapOption = { 
+              center: new kakao.maps.LatLng(
+                  xPos, yPos
+                  ),// 지도의 중심좌표
+              level: zoomLevel // 지도의 확대 레벨
+          };
+  
+      let markerPos = new kakao.maps.LatLng(
+          markerXPos, markerYPos 
+      );
+  
+      let marker = new kakao.maps.Marker({
+          position : markerPos,
+      });
+  
+      function posRemote(value) {
+          mapContainer.mapOption.center = this.value;
+      };
+  
+      // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+      const map = new kakao.maps.Map(mapContainer, mapOption); 
+      var position = [];
+      
+      marker.setMap(map);
+
+      //click Event
+      kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
+        // 클릭한 위도, 경도 정보를 가져옵니다 
+        var latlng = mouseEvent.latLng; 
+        // 마커 위치를 클릭한 위치로 옮깁니다
+        marker.setPosition(latlng);
+  
+        $xPosInput.value = latlng.getLat() 
+        $yPosInput.value = latlng.getLng() 
+
+    });
+
+    document.querySelector('.submit').addEventListener('click',mapInsertFun);
+
+//data send
+function mapInsertFun() {  
+    
+    let xPos = document.forms[0].elements[0].value;
+    let yPos = document.forms[0].elements[1].value;
+    let map_title = document.forms[0].elements[2].value;
+    let reqData = {'xPos':xPos, 'yPos':yPos, 'map_title':map_title };
+     
+    ajax_send('http://localhost:3000/map/insert', reqData);
+};
+
+//Send Req
+function ajax_send(url, data){
+    //set xml
+    data = JSON.stringify(data);
+    let xhr = new XMLHttpRequest();
+    
+    console.log(data);
+    xhr.open('POST',url);
+    xhr.setRequestHeader('Content-type','application/json');
+    xhr.send(data)
+
+    //send xml
+    xhr.addEventListener('load', function(){
+        let result = JSON.parse(xhr.responseText);
+        if (result.result=='no'){
+            //document.querySelector('.result').innerHTML = '로그인에 실패했습니다.'        
+          }
+        else if(result.result=='ok'){
+          console.log(result.data)
+          console.log('ㅎㅇ') ;
+        }
+        else if(result.data){
+          for(let i=0; i<result.data.length ; i++){
+            console.log(result.data)
+            var imageSize = new kakao.maps.Size(24, 35); 
+            var imageSrc ="/images/seadronix.png"
+            //마커 이미지를 생성합니다    
+            var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
+
+            var marker = new kakao.maps.Marker({
+                map: map, // 마커를 표시할 지도
+                title:result.data[i].title, // 마커를 표시할 위치
+                position: new kakao.maps.LatLng(result.data[i].xPos,result.data[i].yPos), // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+                image : markerImage // 마커 이미지 
+            });
+            
+          }
+        }
+    });
+}
+//documet.ready
+document.addEventListener("DOMContentLoaded", function(){
+ ajax_send('http://localhost:3000/map/selectPoint', {'hi':'poo'});
+});
+</script>
+  
     
 </html>

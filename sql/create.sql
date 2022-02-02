@@ -11,6 +11,16 @@ create table SDRNX_MEMBER(
     primary key(user_seq)
 );
 
+create table SDRNX_MAP(
+	map_seq  int not null auto_increment,
+    user_seq int,
+    title varchar(200),
+    xPos DOUBLE,
+    yPos DOUBLE,
+    primary key(map_seq),
+    foreign key(user_seq)  REFERENCES SDRNX_MEMBER(user_seq) ON UPDATE CASCADE
+);
+
 insert into sdrnx_member(id, pw, name) value('deed1515', '1234', '이충호');
 commit;
 
