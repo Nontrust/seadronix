@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+    <ul>
+      <li><a href="/video">Video Main</a></li>
+      <li><a href="/video/stream">A. 영상 출력 (파일 또는 비디오 스트림 데이터 출력)</a></li>
+      <li><a href="/video/blend">B. 출력 영상에 Text 또는 이미지를 Blending하여 출력</a></li>
+      <li><a href="/video/size">C. 영상 출력 화면 크기 및 위치 조정 기능</a></li>
+    </ul>
+    <video width="320" height="240" controls>
+      <!-- <source src="movie/big.mp4" type="video/mp4"> -->
+      <source src="http://localhost/movie/big.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </body>
+  <script>
+     // 캔버스콘텍스트 가져오기
+ var canvas = document.querySelector('.canvas');
+ var ctx = canvas.getContext('2d');
+ let cHeight = canvas.offsetHeight;
+ let cWidth = canvas.offsetWidth;
+ 
+ // 폰트 및 색상 세팅!
+ ctx.font = 'bold 50px gordic';
+  ctx.fillStyle = 'red';
+ 
+ const $video = document.querySelector('.video');
+ const $assignBtn = document.querySelector('.textAssign');
+ $video.addEventListener('canplaythrough', render);
+ $assignBtn.addEventListener('click', assignMesssages);
+ 
+ 
+ //var messages =  [{time: getRandomInt(0,5), message:"<%=message%>", x: getRandomInt(1, cHeight), y: getRandomInt(1,cWidth)}]
+ var messages =  [{time: getRandomInt(0,5), message:"<%=message%>", x: getRandomInt(1, cHeight), y: getRandomInt(1,cWidth)}]
+   
+ 
+ function render() {
+     this.cWidth = canvas.offsetWidth;
+     this.cHeight = canvas.offsetHeight;
+
+     ctx.drawImage($video, 0, 0, cWidth, cHeight);
+     
+     for (let i = 0; i < messages.length; i++) {
+         if ($video.currentTime > messages[i].time) {
+             ctx.fillText(messages[i].message, messages[i].x, messages[i].y);
+           }
+       }
+       requestAnimationFrame(render);
+   }
+   
+   function assignMesssages(){
+       let textVal = document.querySelector('.renderText').value;
+       location.href="/video/blend/"+textVal;
+   }
+   function getRandomInt(min, max) {
+     min = Math.ceil(min);
+     max = Math.floor(max);
+     return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
+   }
+
+
+ var isEmpty = function(value){ if( value == "" || value == null || value == undefined || ( value != null && typeof value == "object" && !Object.keys(value).length ) ){ return true }else{ return false } };
+
+
+  </script>
+</html>

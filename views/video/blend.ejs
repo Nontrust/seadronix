@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <style>.resize{
+      border: hotpink;
+      resize: both;
+    }</style>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+    <ul>
+      <li><a href="/video">Video Main</a></li>
+      <li><a href="/video/stream">A. 영상 출력 (파일 또는 비디오 스트림 데이터 출력)</a></li>
+      <li><a href="/video/blend">B. 출력 영상에 Text 또는 이미지를 Blending하여 출력</a></li>
+      <li><a href="/video/size">C. 영상 출력 화면 크기 및 위치 조정 기능</a></li>
+    </ul>
+    <div><h3>텍스트 입력</h3><input type="text" class="renderText"> <button class ="textAssign">텍스트</button></div>
+    <!-- <div><h3>텍스트 입력</h3>
+      <input type="text" id="height"> 
+      <input type="text" class="width"> 
+      <button class ="testBtn">텍스트</button></div> -->
+    </div>
+    <div class="resize">
+      <canvas id = 'canvas' class="canvas" width="600" height="400">
+        <!-- default msg -->
+          이 브라우저는 캔버스를 지원하지 않습니다. 
+      </canvas>
+    </div>
+    <h4>원본 이미지</h4>
+    <div>
+      <video class="video" src="/videos/boom.mp4" width="30%" height="30%" autoplay muted loop >
+          <!-- default msg -->
+          이 브라우저는 비디오를 지원하지 않습니다. 
+      </video>
+    </div>
+  </body>
+  <script>
+   <%-include('../../public/javascripts/video.js') %>
+  </script>
+
+  <script>
+  
+  </script>
+</html>

@@ -33,6 +33,8 @@ app.use(session({
 // cookie 설정
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+//app.use(express.static(path.join(__dirname, 'public/javascripts')));
+
 
 
 
