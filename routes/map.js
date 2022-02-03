@@ -32,7 +32,7 @@ const con = mysql.createConnection({
 
 
 let params = { 
-    title: 'seadronix-first task', 
+    title: 'seadronix-second task', 
     javascript_Key : javascript_Key,
 }
 

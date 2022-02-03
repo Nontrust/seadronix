@@ -10,10 +10,9 @@
  
  const $video = document.querySelector('.video');
  const $assignBtn = document.querySelector('.textAssign');
- const $testBtn = document.querySelector('.testBtn');
  $video.addEventListener('canplaythrough', render);
  $assignBtn.addEventListener('click', assignMesssages);
- $testBtn.addEventListener('click', test);
+
  
  
  //var messages =  [{time: getRandomInt(0,5), message:"<%=message%>", x: getRandomInt(1, cHeight), y: getRandomInt(1,cWidth)}]

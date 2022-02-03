@@ -1,36 +1,98 @@
+
 <!DOCTYPE html>
 <html>
   <head>
+  <head>
+    <style>
+
+      #c2 {
+        background-image: url(/images/seadronix.png);
+        background-repeat: no-repeat;
+      }
+      div {
+        float: left;
+        border :1px solid #444444;
+        padding:10px;
+        margin: 10px;
+        /* background:#3B3B3B; */
+      }
+    </style>
+
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
-
     <style>.canvas{resize: both;}</style>
   </head>
-  <body>
+  <body onload="doLoad()">
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
-    <ul>
-      <li><a href="/video">Video Main</a></li>
-      <li><a href="/video/stream">A. 영상 출력 (파일 또는 비디오 스트림 데이터 출력)</a></li>
-      <li><a href="/video/blend">B. 출력 영상에 Text 또는 이미지를 Blending하여 출력</a></li>
-      <li><a href="/video/size">C. 영상 출력 화면 크기 및 위치 조정 기능</a></li>
-    </ul>
-    <div><h3>텍스트 입력</h3><input type="text" class="renderText"> <button class ="textAssign">텍스트</button></div>
+    <a href = "https://developer.mozilla.org/ko/docs/Web/API/Canvas_API/Manipulating_video_using_canvas"> reference </a>
+      <%-include('./menu.html') %>
     <div>
-      <canvas class="canvas" width="600" height="400">
-        <!-- default msg -->
-          이 브라우저는 캔버스를 지원하지 않습니다. 
-      </canvas>
+      <video id="video" src="/videos/boom.mp4" width="160" height="96" controls="true"/>
     </div>
-    <h4>원본 이미지</h4>
     <div>
-      <video class="video" src="/videos/boom.mp4" width="30%" height="30%" autoplay muted loop >
-          <!-- default msg -->
-          이 브라우저는 비디오를 지원하지 않습니다. 
-      </video>
+      <canvas id="c1" width="640" height="360"></canvas>
+      <canvas id="c2" width="640" height="360"></canvas>
+
     </div>
+    
   </body>
-  <script>
-   <%-include('../../public/javascripts/blendimg.js') %>
-  </script>
+
+<script>
+  // const $height= document.querySelector(".height");
+  // const $width= document.querySelector(".width");
+  // document.querySelector(".apply").addEventListener("click",resize);
+  // $(window).resize(function (){ if (window.outerWidth <= 800) { alert('현재 브라우저 크기가 <= 800px'); } })
+
+
+
+
+
+  function resize(e){
+    console.log(e)
+  }
+
+  function doLoad() {
+    this.video = document.getElementById('video');
+    this.c1 = document.getElementById('c1');
+    this.ctx1 = this.c1.getContext('2d');
+    this.c2 = document.getElementById('c2');
+    this.ctx2 = this.c2.getContext('2d');
+    let self = this;
+
+    this.video.addEventListener('play', function() {
+        self.width = self.video.videoWidth / 2;
+        self.height = self.video.videoHeight / 2;
+        self.timerCallback();
+      }, false);
+  }
+  
+  function timerCallback() {
+    if (this.video.paused || this.video.ended) {
+      return;
+    }
+    this.computeFrame();
+    let self = this;
+    setTimeout(function() {
+        self.timerCallback();
+      }, 0);
+  }
+
+  function computeFrame() {
+    this.ctx1.drawImage(this.video, 0, 0, this.width, this.height);
+    let frame = this.ctx1.getImageData(0, 0, this.width, this.height);
+    let l = frame.data.length / 4;
+
+    for (let i = 0; i < l; i++) {
+      let r = frame.data[i * 4 + 0];
+      let g = frame.data[i * 4 + 1];
+      let b = frame.data[i * 4 + 2];
+      //if (g > 100 && r > 100 && b < 43)
+      if (g > 200  && r < 3 && b < 3)
+        frame.data[i * 4 + 3] = 0;
+    }
+    this.ctx2.putImageData(frame, 0, 0);
+    return;
+  }
+</script>
 </html>

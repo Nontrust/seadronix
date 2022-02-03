@@ -35,11 +35,7 @@
  $video.addEventListener('canplaythrough', render);
  $assignBtn.addEventListener('click', assignMesssages);
  
- 
- //var messages =  [{time: getRandomInt(0,5), message:"<%=message%>", x: getRandomInt(1, cHeight), y: getRandomInt(1,cWidth)}]
- var messages =  [{time: getRandomInt(0,5), message:"<%=message%>", x: getRandomInt(1, cHeight), y: getRandomInt(1,cWidth)}]
-   
- 
+
  function render() {
      this.cWidth = canvas.offsetWidth;
      this.cHeight = canvas.offsetHeight;
